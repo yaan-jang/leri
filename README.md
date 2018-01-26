@@ -1,1 +1,2 @@
-#Leri 
+# Leri 
+[Leri](https://godzilla.uchicago.edu/pages/ngaam/leri/index.html) is part of Sibe, providing bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of (1) *in silico* protein folding & design, (2) NGS data Analysis, (3) population genomics, (4) statistical analysis on data, (5) deep learning & optimization, as well as other genomic data analysis.
