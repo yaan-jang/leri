@@ -7,6 +7,8 @@
 - deep learning & optimization
 - as well as other omic data analysis.
 
+![Alt text](leri-overview.png?raw=true "")
+
 Leri Analytics delivers the most accurate solutions to your research and industrial applications. Understanding the specific purpose of your project, we will try our best to provide standard pipelines that particularly developed for your project, the best solutions, and the detailed analytical reports. Contact us now for a free consultation by email at yaan.jang@gmail.com.
 
 
