@@ -10,7 +10,25 @@
 Leri Analytics delivers the most accurate solutions to your research and industrial applications. Understanding the specific purpose of your project, we will try our best to provide standard pipelines that particularly developed for your project, the best solutions, and the detailed analytical reports. Contact us now for a free consultation by email at nyaam.ch@gmail.com.
 
 
-### History 
+History:
+
+01-29-2019
+Version 2.4.2 Leri Analytics: fixed bugs in de Brujin graph.
+
+01-12-2019
+Version 2.4.1 Leri Analytics: HTML and GNUPLOT based analytical reports are successfullly implemented.
+
+12-18-2018
+Version 2.4.0 Leri Analytics: protocols of sequential evolving neural network were initialized.
+
+11-09-2018
+Version 2.3.1 Leri Analytics: synteny is added and for testing.
+
+11-02-2018
+Version 2.3.0 Leri Analytics: GPU-ebabled calculations for protein sequences. 
+
+10-27-2018
+Version 2.2.9 Leri Analytics: assign GPUs to MPI process on PCC for sequence analysis.
 
 10-25-2018
 Version 2.2.9 Leri Analytics: assign GPUs to MPI process on PCC for sequence analysis.
