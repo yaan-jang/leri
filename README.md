@@ -974,7 +974,23 @@ leri img_cnn -jobname CNN_Test -dirt leri-example/img/MNIST/ -threads <INT, opti
 ```
 You can also define your own output path using *-output <PATH_TO_YOUR_DIRECTORY>*.
 
-History:
+
+### History
+
+04-05-2019
+Version 2.4.7 Leri Analytics: convert protein sequence to its tertiary structure based on predicted \phi and \psi. 
+
+03-29-2019
+Version 2.4.6 Leri Analytics: convert protein sequence to its reduced representation. 
+
+03-26-2019
+Version 2.4.5 Leri Analytics: improved evolving fuzzy model, OptiFel, and initialized NiRecor demo in current version.
+
+02-21-2019
+Version 2.4.4 Leri Analytics: fixed bugs and improved flexity of analytical reports.
+
+02-15-2019
+Version 2.4.3 Leri Analytics: analytical reports are based on HTML.
 
 01-29-2019
 Version 2.4.2 Leri Analytics: fixed bugs in de Brujin graph.
