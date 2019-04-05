@@ -1,5 +1,5 @@
 # Leri Analytics
-[Leri Analytics](https://godzilla.uchicago.edu/pages/ngaam/leri/index.html) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of 
+[Leri Analytics](https://godzilla.uchicago.edu/pages/ngaam/leri/index.html) (leri, also termed leria) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of 
 - *in silico* protein folding & design (improved from [Sibe](https://godzilla.uchicago.edu/pages/ngaam/sibe/index.html))
 - NGS data analysis
 - population genomics
@@ -8,6 +8,7 @@
 - as well as other omic data analysis.
 
 ![Alt text](leri-overview.png?raw=true "")
+
 
 Leri Analytics delivers the most accurate solutions to your research and industrial applications. Understanding the specific purpose of your project, we will try our best to provide standard pipelines that particularly developed for your project, the best solutions, and the detailed analytical reports. Contact us now for a free consultation by email at yaan.jang@gmail.com.
 
@@ -52,6 +53,134 @@ cd build
 cmake ..
 make
 ```
+
+## Examples
+### 1. Protein sequence analysis
+First, you need to install [HMMER software](http://hmmer.org) and download UniRef database [here](https://www.uniprot.org/downloads) to preprare protein sequences. 
+Before you start to launch Leri, a multiple sequence alignment (MSA) is required. 
+Firstly, install software *jackhmmer* on your own machine if there is no the tool. 
+Here, *jackhmmer* is used to prepare the MSA by search against the Uniref\*\* database. 
+A simple script that illustrates how to apply the *jackhmmer* to search your query 
+protein sequence is show as follows,  
+
+```
+jackhmmer \
+--notextwi \                                    # Unlimit ASCII text output line width
+ -A <USER_DEFINED_FILE.sto> \                   # Save the multiple alignment of hits to file
+--tblout <USER_DEFINED_FILE_tbl.out> \          # Save parseable table of per-sequence hits to file
+--domtblout <USER_DEFINED_FILE_domtbl.out> \    # Save parseable table of per-domain hits to file
+ -E 0.01 \                                      # Report sequences <= this E-value threshold in output
+--popen 0.25 \                                  # Gap open probability
+--pextend 0.4 \                                 # Gap extend probability
+--mxfile <DIRECT_TO_BLOSUM62.mat> \             # Read substitution score matrix from file
+ <FASTA> \                                      # Query protein sequence
+ <DIRECT_TO_Uniref*> \                          # Where to locate the Uniref50, Uniref90, or Uniref100 database
+>/dev/null
+```
+
+When you get the multiple alignment of hits from the jackhmmer, it is time to launch 
+the Leri to convert the file to the stardard FASTA format. The command line that 
+converts *.sto file to FASTA file is presented here,
+```
+leri sequence_converter -jobname <JOB_NAME> -msa <NAME_OF_STO>.sto
+```
+Trim aligned sequences according to the query sequence. 
+```
+leri sequence_trim -jobname <JOB_NAME> -msa <NAME_OF_MSA>_msa.a2m
+```
+Basic statistics on the aligned sequences,
+```
+leri sequence_stats -jobname <JOB_NAME> -msa <NAME_OF_MSA>_msa_trimmed.aln
+```
+### 2. Protein rational design
+This project aims to provide a computational method for protein design. Accordingly, we can design a ``super protein" of a protein family stabilizing in a large range of temperature.
+#### 2.1 Evolutionary coupling
+```
+leri sequence_coupling -jobname <JOB_NAME> -msa <NAME_OF_MSA>_msa_trimmed.aln 
+```
+#### 2.2 Single mutation
+Leri provides a tool, shown as following command, for the computer-aided design of mutant proteins with controlled evolutionary information. It evaluates the changes at signle site in stability of a protein without referring to its tertiary structure. Fig. X illustrates energy changes (\Delta E=Emut-Ewt) between wild type and mutant sequences when a single mutation occurs to the wild type sequence.
+
+#### 2.3 Rational design
+```
+leri sequence_design -jobname <JOB_NAME> -fastx <WILD_SEQ_NAME>.fasta -mat <POTENTIAL_NAME>.txt 
+```
+#### 2.4 Sequence energy
+```
+leri sequence_energy -jobname <JOB_NAME> -msa <SEQ_NAME>.aln -mat <POTENTIAL_NAME>.txt 
+```
+
+### 3. Sequencing data analysis
+#### 3.1 Quality control
+#### 3.2 Sequence assembly
+### 4. Structural bioinformatics
+#### 4.1 Get FASTA from PDB
+```
+leri pdb_parser -jobname <JOB_NAME> -pdb <PDB_NAME>.pdb -type <INT>
+```
+#### 4.2 Compute residue contacts
+```
+leri calc_contact -jobname <JOB_NAME> -pdb <PDB_NAME>.pdb -threshold 7.50 -atom_type CA 
+```
+#### 4.3 Convert FASTA to PDB
+```
+leri fasta2pdb -jobname <JOB_NAME> -fastx <FASTA_NAME>.fasta
+```
+#### 4.4 Protein folding
+```
+leri protein_folding -jobname <JOB_NAME> -fastx <FASTA_NAME>.fasta -cfg <CFG_NAME>.cfg 
+```
+#### 4.5 Features from FASTA
+First to download ncbi-blast-2.7.1 and psipred-4.0.2, as well as database (nr database), then 
+```
+leri build_feature_data -jobname <JOB_NAME> -dirt <DIRECTORY> -flag 0 -index cullpdb_pc50_res1.8_R0.25_d171102_chains10609
+```
+where <index> is culled PDB ID list, one can download it from [PISCES server](http://dunbrack.fccc.edu/pisces), and <dirt> is to contain the index of PDB and results. 
+
+### 5. Optimization
+#### 5.1 The convergent heterogeneous particle swarm optimizer
+The [CHPSO algorithm](https://ieeexplore.ieee.org/document/6583326) is a swarm-based optimization approach. In CHPSO approach, four cooperative sub-swarms that can share information from each other but maintain differences contribute to keep a good balance between the exploration and exploitation in optimization and make the particles capable of converging to stable points. Users can define their objective function in include/leri/objfunc.hpp.
+```
+leri opt_chpso -jobname <JOB_NAME> -npop 8 -ntrial 3
+```
+#### 5.2 The Broyden–Fletcher–Goldfarb–Shanno (BFGS) algorithm with limited-memory
+The L-BFGS method is an optimization algorithm in the family of quasi-Newton methods using a limited amount of computer memory. Users can define their objective function in include/leri/objfunc.hpp.
+#### 5.3 Nested sampling
+```
+leri nested_sampler -jobname <JOB_NAME> -npop 10 -max_iter 200 
+```
+#### 5.4 jDE
+[jDE](https://ieeexplore.ieee.org/document/4016057) is metaheuristics method based on [Differential Evolution](https://en.wikipedia.org/wiki/Differential_evolution) with self-adapting control parameters.
+```
+leri opt_jde -jobname <JOB_NAME> -npop 32
+```
+### 6. Machine learning
+#### 6.1 Sequential evolving neural network (SENET)
+SENET is a general evolving framework for deep neural networks on different specific data-sets.
+#### 6.2 Phsior
+[Phsior](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205819) is a real-value predictor developed based on convolutional neural network for predicting the torsion angles.
+#### 6.3 OptiFel
+[OptiFel](https://ieeexplore.ieee.org/document/6583326) is a mathematical model base on fuzzy theory and CHPSO optimizer. It is a kind of 'neuroevolution' in modeling your data, and it is very easy to use. It does not require any experience to build the model. OptiFel is a data-driven method rooting in accurate and reliable fuzzy systems, where the structure and parameters are encoded in an optimization framework of heterogeneous heuristic search algorithm. This methodology provides different search behaviors for finding the optimal structure and parameters suitable for the subspaces of the fuzzy models. The theoretical proof has demonstrated that the cooperative search can maintain a balance between exploration and exploitation to ensure the algorithm converges to stable points. OptiFel can be applied to biological systems and protein structure prediction.
+
+##### 6.3.1 OptiFel training phase
+Just simply prepare your data in two separate txt files, train.txt and test.txt. For example, in train.txt, the first column must be the outputs (targets), the other columns are the features for building a model, and they are separated by a table. 
+```
+leri optifel -jobname <JOB_NAME> -phase 0 -nrule 3 -dirt leri-example/optifel/ -ntrial 3
+```
+When a model is built, you can do prediction on your data by following command, bear in mind, you must use the same number of fuzzy rules as that in training phase, e.g. *-nrule 3*
+##### 6.3.2 OptiFel test phase
+```
+leri optifel -jobname <JOB_NAME> -phase 1 -nrule 3 -mat leri-example/optifel/data-test.txt -cfg <TRAINED_PARAMETERS>.par
+```
+
+#### 6.4 Basic CNN
+To test simple CNN, one can use following command to start, and the report in HTML will be presented in *leri-output* if you don't define the output path. 
+```
+leri img_cnn -jobname CNN_Test -dirt leri-example/img/MNIST/ -threads <INT, option, e.g. 4> -echo <INT, option, e.g. 10> -mbs <INT, option, e.g. 32> -solver <STRING, option,e.g. adam> -lrate <FLOAT, option, e.g. 0.04>
+```
+You can also define your own output path using *-output <PATH_TO_YOUR_DIRECTORY>*.
+
+
 ### APIs (part)
 ##### Base call
 ```cpp
@@ -283,36 +412,58 @@ int senet() {
 ##### OptiFel: fuzzy modeling method
 ```cpp
 int optifel() {
-  /* N. J. Cheung, X.-M. Ding, H.-B. Shen. IEEE Transactions on Fuzzy Systems, 22(4): 919-933, 2014. */
   FLAGS_type = 1;
-  if (!FLAGS_mat.size()) {
-    info_error("ERROR: Where to locate your data matrix file that requires for OptiFel modeling?\nUsage: leri optifel -mat <STRING> -max_iter <INT> -npop <INT> -nvar <INT> -nrule <INT> -output <STRING>");
-  }
   if (FLAGS_phase != 0 && FLAGS_phase != 1) {
-    info_error("ERROR: Leri doesn't know to train or predict, please tell it by -phase=0 (train) or -phase=1 (predict)\nUsage: leri optifel -mat <STRING> -max_iter <INT> -npop <INT> -nvar <INT> -nrule <INT> -output <STRING>");
+    printf("\033[1;31m");
+    printf("ERROR: Leri doesn't know what to do, train or predict? please tell it using -phase=0 for training or -phase=1 for prediction.\n");
+    printf("Usage:\n");
+    printf("-- 1. Training:   leri optifel -jobname <STRING> -phase 0 -nrule <INT> -dirt <STRING> -max_iter <INT> -npop <INT>\n");
+    printf("-- 2. Prediction: leri optifel -jobname <STRING> -phase 1 -nrule <INT> -mat <STRING> -cfg <STRING> -max_iter <INT> -npop <INT>\n");
+    printf("\033[0m\n");
+    printf("\n");
+    exit (EXIT_FAILURE);
   }
   if (!FLAGS_phase) {
-    printf( "-- Invocation: leri optifel -mat %s -phase %d -max_iter %d -npop %d -nrule %d -output %s\n", FLAGS_mat.c_str(), FLAGS_phase, FLAGS_max_iter, FLAGS_npop, FLAGS_nrule, FLAGS_output.c_str());
+    if (!FLAGS_dirt.size()) {
+      printf("\033[1;31m");
+      printf("ERROR: Leri doesn't know where to locate your data matrix files that are required by OptiFel!\n");
+      printf("Usage:\n");
+      printf("-- Training:   leri optifel -jobname <STRING> -phase 0 -nrule <INT> -dirt <STRING> -max_iter <INT> -npop <INT>\n");
+      printf("\033[0m\n");
+      printf("\n");
+      exit (EXIT_FAILURE);
+    }
+    printf( "-- Invocation: leri optifel -jobname %s -phase %d -nrule %d -dirt %s -max_iter %d -npop %d -nout %d -output %s\n", FLAGS_jobname.c_str(), FLAGS_phase, FLAGS_nrule, FLAGS_dirt.c_str(), FLAGS_max_iter, FLAGS_npop, FLAGS_nout, FLAGS_output.c_str());
   } else {
-    printf( "-- Invocation: leri optifel -mat %s -cfg %s -phase %d -nrule %d -output %s\n", FLAGS_mat.c_str(), FLAGS_cfg.c_str(), FLAGS_phase, FLAGS_nrule, FLAGS_output.c_str());
+    if (!FLAGS_mat.size()) {
+      printf("\033[1;31m");
+      printf("ERROR: Leri doesn't know where to locate your data matrix file that is required by OptiFel!\n");
+      printf("Usage:\n");
+      printf("-- Prediction: leri optifel -jobname <STRING> -phase 1 -nrule <INT> -mat <STRING> -cfg <STRING> -max_iter <INT> -npop <INT>\n");
+      printf("\033[0m\n");
+      printf("\n");
+      exit (EXIT_FAILURE);
+    }
+    printf( "-- Invocation: leri optifel -jobname %s -phase %d -nrule %d -mat %s -cfg %s -output %s\n", FLAGS_jobname.c_str(), FLAGS_phase, FLAGS_nrule, FLAGS_mat.c_str(), FLAGS_cfg.c_str(), FLAGS_output.c_str());
   }
-
+  string str_tmp = FLAGS_dirt;
+  int found = str_tmp.find_last_of("/\\");
+  int len = str_tmp.length();
+  if( found != len-1 ) { str_tmp += "/"; }
+  FLAGS_dirt = str_tmp;
   leri::SolverParam<double> param;
   // param.m = m;
   param.set_param(FLAGS_nvar, FLAGS_npop);
   leri::CHPSO_Solver<double> OptiFel(FLAGS_type, param, FLAGS_output, FLAGS_jobname, FLAGS_ntrial, FLAGS_max_iter);
+  
   if(FLAGS_phase == 0) { 
-    OptiFel.optifel_load_data(FLAGS_mat, FLAGS_nrule);
-    OptiFel.chpso_actuate();
+    OptiFel.load_data(FLAGS_dirt, FLAGS_nrule, FLAGS_nout);
   }
   if(FLAGS_phase == 1) {
-    string str;
-    leri::get_file_name(str, FLAGS_mat);
-    OptiFel.optifel_load_data(FLAGS_mat, FLAGS_nrule, 1);
-    OptiFel.optifel_load_data(FLAGS_cfg, FLAGS_nrule, 2);
-    OptiFel.optifel_prediction(str, FLAGS_output);
+    OptiFel.load_data(FLAGS_mat, FLAGS_nrule, FLAGS_nout, FLAGS_cfg);
   }
-  OptiFel.finish();
+  OptiFel.optifel_actuate(FLAGS_phase);
+  // OptiFel.finish();
   return 0;
 }
 
@@ -855,124 +1006,6 @@ int nested_sampler() {
 }
 ```
 
-## Examples
-### 1. Protein sequence analysis
-First, you need to install [HMMER software](http://hmmer.org) and download UniRef database [here](https://www.uniprot.org/downloads) to preprare protein sequences. 
-Before you start to launch Leri, a multiple sequence alignment (MSA) is required. 
-Firstly, install software *jackhmmer* on your own machine if there is no the tool. 
-Here, *jackhmmer* is used to prepare the MSA by search against the Uniref\*\* database. 
-A simple script that illustrates how to apply the *jackhmmer* to search your query 
-protein sequence is show as follows,  
-
-```
-jackhmmer \
---notextwi \                                    # Unlimit ASCII text output line width
- -A <USER_DEFINED_FILE.sto> \                   # Save the multiple alignment of hits to file
---tblout <USER_DEFINED_FILE_tbl.out> \          # Save parseable table of per-sequence hits to file
---domtblout <USER_DEFINED_FILE_domtbl.out> \    # Save parseable table of per-domain hits to file
- -E 0.01 \                                      # Report sequences <= this E-value threshold in output
---popen 0.25 \                                  # Gap open probability
---pextend 0.4 \                                 # Gap extend probability
---mxfile <DIRECT_TO_BLOSUM62.mat> \             # Read substitution score matrix from file
- <FASTA> \                                      # Query protein sequence
- <DIRECT_TO_Uniref*> \                          # Where to locate the Uniref50, Uniref90, or Uniref100 database
->/dev/null
-```
-
-When you get the multiple alignment of hits from the jackhmmer, it is time to launch 
-the Leri to convert the file to the stardard FASTA format. The command line that 
-converts *.sto file to FASTA file is presented here,
-```
-leri sequence_converter -jobname <JOB_NAME> -msa <NAME_OF_STO>.sto
-```
-Trim aligned sequences according to the query sequence. 
-```
-leri sequence_trim -jobname <JOB_NAME> -msa <NAME_OF_MSA>_msa.a2m
-```
-Basic statistics on the aligned sequences,
-```
-leri sequence_stats -jobname <JOB_NAME> -msa <NAME_OF_MSA>_msa_trimmed.aln
-```
-### 2. Protein rational design
-This project aims to provide a computational method for protein design. Accordingly, we can design a ``super protein" of a protein family stabilizing in a large range of temperature.
-#### 2.1 Evolutionary coupling
-```
-leri sequence_coupling -jobname <JOB_NAME> -msa <NAME_OF_MSA>_msa_trimmed.aln 
-```
-#### 2.2 Single mutation
-Leri provides a tool, shown as following command, for the computer-aided design of mutant proteins with controlled evolutionary information. It evaluates the changes at signle site in stability of a protein without referring to its tertiary structure. Fig. X illustrates energy changes (\Delta E=Emut-Ewt) between wild type and mutant sequences when a single mutation occurs to the wild type sequence.
-
-#### 2.3 Rational design
-```
-leri sequence_design -jobname <JOB_NAME> -fastx <WILD_SEQ_NAME>.fasta -mat <POTENTIAL_NAME>.txt 
-```
-#### 2.4 Sequence energy
-```
-leri sequence_energy -jobname <JOB_NAME> -msa <SEQ_NAME>.aln -mat <POTENTIAL_NAME>.txt 
-```
-
-### 3. Sequencing data analysis
-#### 3.1 Quality control
-#### 3.2 Sequence assembly
-### 4. Structural bioinformatics
-#### 4.1 Get FASTA from PDB
-```
-leri pdb_parser -jobname <JOB_NAME> -pdb <PDB_NAME>.pdb -type <INT>
-```
-#### 4.2 Compute residue contacts
-```
-leri calc_contact -jobname <JOB_NAME> -pdb <PDB_NAME>.pdb -threshold 7.50 -atom_type CA 
-```
-#### 4.3 Protein folding
-```
-leri protein_folding -jobname <JOB_NAME> -fastx <FASTA_NAME>.fasta -cfg <CFG_NAME>.cfg 
-```
-#### 4.4 Features from FASTA
-First to download ncbi-blast-2.7.1 and psipred-4.0.2, as well as database (nr database), then 
-```
-leri build_feature_data -jobname <JOB_NAME> -dirt <DIRECTORY> -flag 0 -index cullpdb_pc50_res1.8_R0.25_d171102_chains10609
-```
-where <index> is culled PDB ID list, one can download it from [PISCES server](http://dunbrack.fccc.edu/pisces), and <dirt> is to contain the index of PDB and results. 
-#### 
-### 5. Optimization
-#### 5.1 The convergent heterogeneous particle swarm optimizer
-The CHPSO algorithm is a swarm-based optimization approach. In CHPSO approach, four cooperative sub-swarms that can share information from each other but maintain differences contribute to keep a good balance between the exploration and exploitation in optimization and make the particles capable of converging to stable points. Users can define their objective function in include/leri/objfunc.hpp.
-```
-leri opt_chpso -jobname <JOB_NAME> -npop 8 -ntrial 3
-```
-#### 5.2 The Broyden–Fletcher–Goldfarb–Shanno (BFGS) algorithm with limited-memory
-The L-BFGS method is an optimization algorithm in the family of quasi-Newton methods using a limited amount of computer memory. Users can define their objective function in include/leri/objfunc.hpp.
-#### 5.3 Nested sampling
-```
-leri nested_sampler -jobname <JOB_NAME> -npop 10 -max_iter 200 
-```
-#### 5.4 jDE
-```
-leri opt_jde -jobname <JOB_NAME> -npop 32
-```
-### 6. Machine learning
-#### 6.1 Sequential evolving neural network (SENET)
-SENET is a general evolving framework for deep neural networks on different specific data-sets.
-#### 6.2 Phsior
-Phsior is a real-value predictor developed based on convolutional neural network for predicting the torsion angles.
-#### 6.3 OptiFel
-OptiFel is a data-driven method of accurate and reliable fuzzy systems, where the structure and parameters are encoded in an optimization framework of heterogeneous heuristic search algorithm. This methodology provides different search behaviors for finding the optimal structure and parameters suitable for the subspaces of the fuzzy models. The theoretical proof has demonstrated that the cooperative search can maintain a balance between exploration and exploitation to ensure the algorithm converges to stable points. OptiFel can be applied to biological systems and protein structure prediction.
-
-##### 6.3.1 OptiFel training phase
-```
-leri optifel -jobname <JOB_NAME> -mat leri-example/optifel/data-train.txt -nrule 3 -phase 0 -ntrial 3
-```
-##### 6.3.2 OptiFel test phase
-```
-leri optifel -jobname <JOB_NAME> -mat leri-example/optifel/data-test.txt -cfg <TRAINED_PARAMETERS>.par -nrule 3 -phase 1
-```
-
-#### 6.4 Basic CNN
-To test simple CNN, one can use following command to start, and the report in HTML will be presented in *leri-output* if you don't define the output path. 
-```
-leri img_cnn -jobname CNN_Test -dirt leri-example/img/MNIST/ -threads <INT, option, e.g. 4> -echo <INT, option, e.g. 10> -mbs <INT, option, e.g. 32> -solver <STRING, option,e.g. adam> -lrate <FLOAT, option, e.g. 0.04>
-```
-You can also define your own output path using *-output <PATH_TO_YOUR_DIRECTORY>*.
 
 
 ### History
