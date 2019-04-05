@@ -7,6 +7,8 @@
 - deep learning & optimization
 - as well as other omic data analysis.
 
+Now, Leri is supported by GPU to accelerate calculations in life science.
+
 ![Alt text](leri-overview.png?raw=true "")
 
 
@@ -182,7 +184,7 @@ You can also define your own output path using *-output <PATH_TO_YOUR_DIRECTORY>
 
 
 ### APIs (part)
-##### Base call
+#### Base call
 ```cpp
 int base_call() {
   printf("-- Leri Analytics: Base Calling\n");
@@ -224,7 +226,7 @@ int base_call() {
   return 0;
 }
 ```
-##### ATGC statistics
+#### ATGC statistics
 ```cpp
 /*===== ATGC =====*/
 int atgc_stats() {
@@ -244,7 +246,7 @@ int atgc_stats() {
   return 0;
 }
 ```
-##### Read filtering
+#### Read filtering
 ```cpp
 int read_filter() {
   if (!FLAGS_fastx.size()) {
@@ -274,7 +276,7 @@ int read_filter() {
   return 0;
 }
 ```
-##### Kmer
+#### Kmer
 ```cpp
 int kmer_generator() {
   if (!FLAGS_fastx.size()) {
@@ -308,7 +310,7 @@ int kmer_counter() {
   return 0;
 }
 ```
-##### Sequence assembly
+#### Sequence assembly
 ```cpp
 int atgc_assembly() {
   if (!FLAGS_fastx.size()) {
@@ -361,8 +363,8 @@ int atgc_assembly() {
   return 0;
 }
 ```
-##### Statistical Tools
-###### 1. Principle Component Analysis
+#### Statistical Tools
+##### 1. Principle Component Analysis
 ```cpp
 int stats_pca() {
   if (!FLAGS_mat.size()) {
@@ -378,7 +380,7 @@ int stats_pca() {
   return 0;
 }
 ```
-###### 2. [Fast Independent Component Analysis](http://en.wikipedia.org/wiki/FastICA)
+##### 2. [Fast Independent Component Analysis](http://en.wikipedia.org/wiki/FastICA)
 ```cpp
 int stats_ica() {
   if (!FLAGS_mat.size()) {
@@ -391,7 +393,7 @@ int stats_ica() {
   return 0;
 }
 ```
-##### Sequentially evolving neural network (SENET)
+#### Sequentially evolving neural network (SENET)
 ```cpp
 int senet() {
   printf( "-- Leri Analytics: Sequentially Evolving Neural Network on MNIST\n");
@@ -409,7 +411,7 @@ int senet() {
   return 0;
 }
 ```
-##### OptiFel: fuzzy modeling method
+#### OptiFel: fuzzy modeling method
 ```cpp
 int optifel() {
   FLAGS_type = 1;
@@ -468,7 +470,7 @@ int optifel() {
 }
 
 ```
-##### Basic CNN classification
+#### Basic CNN classification
 ```cpp
 int img_cnn() {
   printf( "-- Leri Analytics: Convolutional Neural Network on MNIST\n");
@@ -490,7 +492,7 @@ int img_cnn() {
 }  
 
 ```
-##### Image format convertor
+#### Image format convertor
 ```cpp
 int img2ubyte() {
   if (!FLAGS_dirt.size()) {
@@ -512,7 +514,7 @@ int img2ubyte() {
 }
 
 ```
-##### Protein Sequence Format Converter 
+#### Protein Sequence Format Converter 
 ```cpp
 int sequence_converter() {
   if(!FLAGS_msa.size()) {
@@ -531,7 +533,7 @@ int sequence_converter() {
   return 0;
 }
 ```
-##### Mix G and GPCR sequences
+#### Mix G and GPCR sequences
 ```cpp
 int sequence_mix() {
   if(!FLAGS_fastx.size()) {
@@ -560,7 +562,7 @@ int sequence_mix() {
   return 0;
 }
 ```
-##### Protein Sequence Trimmer
+#### Protein Sequence Trimmer
 ```cpp
 int sequence_trim() {
   if(!FLAGS_msa.size()) {
@@ -580,7 +582,7 @@ int sequence_trim() {
   return 0;
 }
 ```
-##### Protein Sequence Statistics
+#### Protein Sequence Statistics
 ```cpp
 int sequence_stats() {
   if(!FLAGS_msa.size()) {
@@ -609,7 +611,7 @@ int sequence_stats() {
   return 0;
 }
 ```
-##### Residue evolutionary coupling
+#### Residue evolutionary coupling
 ```cpp
 int sequence_coupling() {
   if(!FLAGS_msa.size()) {
@@ -641,7 +643,7 @@ int sequence_coupling() {
   return 0;
 }
 ```
-##### Protein sequence energy
+#### Protein sequence energy
 ```cpp
 int sequence_energy() {
   if(!FLAGS_msa.size() || !FLAGS_mat.size()) {
@@ -666,7 +668,7 @@ int sequence_energy() {
   return 0;
 }
 ```
-##### Protein point mutation
+#### Protein point mutation
 ```cpp
 int point_mutation() {
   /* ddG = dG_mut-dG_wt */
@@ -691,7 +693,7 @@ int point_mutation() {
   return 0;
 }
 ```
-##### Positionally conserved coupling
+#### Positionally conserved coupling
 ```cpp
 int sequence_pcc() {
   printf("-- Leri Analytics: Positionally Conserved Coupling\n"); 
@@ -721,7 +723,7 @@ int sequence_pcc() {
   return 0;
 }
 ```
-##### GPCR-G barcode
+#### GPCR-G barcode
 ```cpp
 int gpcr_g_barcode() {
   printf("-- Leri Analytics: GPCR-G Protein Barcode\n"); 
@@ -748,7 +750,7 @@ int gpcr_g_barcode() {
   return 0;
 }
 ```
-##### Protein sequence design
+#### Protein sequence design
 ```cpp
 int sequence_design() {
   if(!FLAGS_fastx.size() || !FLAGS_mat.size()) {
@@ -784,7 +786,7 @@ int sequence_design() {
   return 0;
 }
 ```
-##### Estimate residue-contact
+#### Estimate residue-contact
 ```cpp
 int residue_contact() {
   if(!FLAGS_msa.size()) {
@@ -804,7 +806,7 @@ int residue_contact() {
   return 0;
 }
 ```
-##### PDB parser
+#### PDB parser
 ```cpp
 int pdb_parser() {
   if(!FLAGS_pdb.size()) {
@@ -846,7 +848,7 @@ int pdb_parser() {
   return 0;
 }
 ```
-##### Calculate residue contacts from a given PDB file
+#### Calculate residue contacts from a given PDB file
 ```cpp
 int calc_contact() {
   if(!FLAGS_pdb.size()) {
@@ -876,7 +878,7 @@ int calc_contact() {
 }
 
 ```
-##### Extracting protein features from FASTA
+#### Extracting protein features from FASTA
 ```cpp
 int build_feature_data() { // something wrong in reading mat3 files, should use read_func in utils.h
   if(!FLAGS_dirt.size()) {
@@ -912,7 +914,7 @@ int build_feature_data() { // something wrong in reading mat3 files, should use 
   return 0;
 }
 ```
-##### Protein folding
+#### Protein folding
 ```cpp
 /*----- Protein Folding -----*/
 int protein_folding() {
@@ -942,8 +944,8 @@ int protein_folding() {
   return 0;
 }
 ```
-##### Optimization
-###### 1. Convergent Heterogeneous Particle Swarm Optimizer
+#### Optimization
+##### 1. Convergent Heterogeneous Particle Swarm Optimizer
 ```cpp
 int opt_chpso() {
   /* N. J. Cheung, X.-M. Ding, H.-B. Shen. IEEE Transactions on Fuzzy Systems, 22(4): 919-933, 2014. */
@@ -958,7 +960,7 @@ int opt_chpso() {
   return 0;
 }
 ```
-###### 2. Differential Evolution (DE) method with self-adapting control parameters
+##### 2. Differential Evolution (DE) method with self-adapting control parameters
 ```cpp
 int opt_jde() {
   /* For more details, pleaser refer to 
@@ -992,7 +994,7 @@ int opt_jde() {
   return 0;
 }
 ```
-###### 3. Nested sampling
+##### 3. Nested sampling
 ```cpp
 int nested_sampler() {
   printf( "-- Invocation: leri nested_sampler -max_iter %d -npop %d -nvar %d\n", FLAGS_max_iter, FLAGS_npop, FLAGS_nvar);
