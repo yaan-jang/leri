@@ -1,11 +1,12 @@
 # Leri Analytics
-[Leri Analytics](https://godzilla.uchicago.edu/pages/ngaam/leri/index.html) (leri, also termed leria) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of 
-- *in silico* protein folding & design (improved from [Sibe](https://godzilla.uchicago.edu/pages/ngaam/sibe/index.html))
-- NGS data analysis
-- population genomics
-- statistical analysis on data
-- deep learning & optimization
-- as well as other omic data analysis.
+[Leri Analytics](https://godzilla.uchicago.edu/pages/ngaam/leri/index.html) (leri, also termed leria) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of   
+- protein rational design  
+- protein folding *in silico* (improved from [Sibe](https://godzilla.uchicago.edu/pages/ngaam/sibe/index.html))  
+- NGS data analysis  
+- statistical analysis on data  
+- deep learning & optimization  
+- sequentially evolving neural networks (SENET)  
+- as well as other omic data analysis.  
 
 Now, Leri is supported by GPU to accelerate calculations in life science.
 
@@ -39,7 +40,7 @@ mkdir build && cd build
 export CXXFLAGS="-fPIC" && cmake .. && make VERBOSE=1 
 make && make install
 ```
-#### 1.3 Glogs
+#### 1.3 Glog
 ```
 wget https://github.com/google/glog/archive/v0.3.4.tar.gz 
 tar zvxf glog-0.3.4.tar.gz 
@@ -102,16 +103,19 @@ leri sequence_coupling -jobname <JOB_NAME> -msa <NAME_OF_MSA>_msa_trimmed.aln
 ```
 #### 2.2 Single mutation
 Leri provides a tool, shown as following command, for the computer-aided design of mutant proteins with controlled evolutionary information. It evaluates the changes at signle site in stability of a protein without referring to its tertiary structure. Fig. X illustrates energy changes (\Delta E=Emut-Ewt) between wild type and mutant sequences when a single mutation occurs to the wild type sequence.
-
+```
+leri point_mutation -jobname <JOB_NAME> -fastx <WILD_SEQ_NAME>.fasta -mat <POTENTIAL_NAME>.txt 
+```
 #### 2.3 Rational design
+Leri can be applied to facilitate the design of a given WT protein, and it attempts to uncover the biophysical rules (evolutionary information) that govern protein folding.
 ```
 leri sequence_design -jobname <JOB_NAME> -fastx <WILD_SEQ_NAME>.fasta -mat <POTENTIAL_NAME>.txt 
 ```
 #### 2.4 Sequence energy
+Given a protein sequence in FASTA, Leri computes energy for the sequence. The energy can be used for comparison between signle mutation at the same position or multiple mutations at their corresponding position in a sequence.
 ```
 leri sequence_energy -jobname <JOB_NAME> -msa <SEQ_NAME>.aln -mat <POTENTIAL_NAME>.txt 
 ```
-
 ### 3. Sequencing data analysis
 #### 3.1 Quality control
 #### 3.2 Sequence assembly
@@ -135,10 +139,9 @@ leri protein_folding -jobname <JOB_NAME> -fastx <FASTA_NAME>.fasta -cfg <CFG_NAM
 #### 4.5 Features from FASTA
 First to download ncbi-blast-2.7.1 and psipred-4.0.2, as well as database (nr database), then 
 ```
-leri build_feature_data -jobname <JOB_NAME> -dirt <DIRECTORY> -flag 0 -index cullpdb_pc50_res1.8_R0.25_d171102_chains10609
+leri extract_feature -jobname <JOB_NAME> -dirt <DIRECTORY> -flag 0 -index <path_to>cullpdb_pc50_res1.8_R0.25_d171102_chains10609
 ```
 where <index> is culled PDB ID list, one can download it from [PISCES server](http://dunbrack.fccc.edu/pisces), and <dirt> is to contain the index of PDB and results. 
-
 ### 5. Optimization
 #### 5.1 The convergent heterogeneous particle swarm optimizer
 The [CHPSO algorithm](https://ieeexplore.ieee.org/document/6583326) is a swarm-based optimization approach. In CHPSO approach, four cooperative sub-swarms that can share information from each other but maintain differences contribute to keep a good balance between the exploration and exploitation in optimization and make the particles capable of converging to stable points. Users can define their objective function in include/leri/objfunc.hpp.
@@ -148,6 +151,7 @@ leri opt_chpso -jobname <JOB_NAME> -npop 8 -ntrial 3
 #### 5.2 The Broyden–Fletcher–Goldfarb–Shanno (BFGS) algorithm with limited-memory
 The L-BFGS method is an optimization algorithm in the family of quasi-Newton methods using a limited amount of computer memory. Users can define their objective function in include/leri/objfunc.hpp.
 #### 5.3 Nested sampling
+The [nested sampling algorithm](https://en.wikipedia.org/wiki/Nested_sampling_algorithm) is a computational approach to the problem of comparing models in [Bayesian statistics](https://en.wikipedia.org/wiki/Bayesian_statistics).
 ```
 leri nested_sampler -jobname <JOB_NAME> -npop 10 -max_iter 200 
 ```
@@ -158,12 +162,11 @@ leri opt_jde -jobname <JOB_NAME> -npop 32
 ```
 ### 6. Machine learning
 #### 6.1 Sequential evolving neural network (SENET)
-SENET is a general evolving framework for deep neural networks on different specific data-sets.
+SENET is a general evolving framework for deep neural networks using a specific and customized data-set as a driver.
 #### 6.2 Phsior
 [Phsior](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205819) is a real-value predictor developed based on convolutional neural network for predicting the torsion angles.
 #### 6.3 OptiFel
 [OptiFel](https://ieeexplore.ieee.org/document/6583326) is a mathematical model base on fuzzy theory and CHPSO optimizer. It is a kind of 'neuroevolution' in modeling your data, and it is very easy to use. It does not require any experience to build the model. OptiFel is a data-driven method rooting in accurate and reliable fuzzy systems, where the structure and parameters are encoded in an optimization framework of heterogeneous heuristic search algorithm. This methodology provides different search behaviors for finding the optimal structure and parameters suitable for the subspaces of the fuzzy models. The theoretical proof has demonstrated that the cooperative search can maintain a balance between exploration and exploitation to ensure the algorithm converges to stable points. OptiFel can be applied to biological systems and protein structure prediction.
-
 ##### 6.3.1 OptiFel training phase
 Just simply prepare your data in two separate txt files, train.txt and test.txt. For example, in train.txt, the first column must be the outputs (targets), the other columns are the features for building a model, and they are separated by a table. 
 ```
@@ -174,7 +177,6 @@ When a model is built, you can do prediction on your data by following command, 
 ```
 leri optifel -jobname <JOB_NAME> -phase 1 -nrule 3 -mat leri-example/optifel/data-test.txt -cfg <TRAINED_PARAMETERS>.par
 ```
-
 #### 6.4 Basic CNN
 To test simple CNN, one can use following command to start, and the report in HTML will be presented in *leri-output* if you don't define the output path. 
 ```
