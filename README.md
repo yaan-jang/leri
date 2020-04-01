@@ -1,7 +1,7 @@
 # Leri Analytics
-[Leri Analytics](https://godzilla.uchicago.edu/pages/yaan/leri/index.html) (leri, also termed leria) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of   
+[Leri Analytics](https://kornmann.bioch.ox.ac.uk/leri/index.html) (leri, also termed leria) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of   
 - protein rational design  
-- protein folding *in silico* (improved from [Sibe](https://godzilla.uchicago.edu/pages/yaan/sibe/index.html))  
+- protein folding *in silico* (improved from [Sibe](http://wyu.dgist.ac.kr/sibe/))  
 - NGS data analysis  
 - statistical analysis on data  
 - deep learning & optimization  
