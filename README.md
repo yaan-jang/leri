@@ -1,5 +1,5 @@
 # Leri Analytics
-[Leri Analytics](https://kornmann.bioch.ox.ac.uk/leri/index.html) (leri, also termed leria) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of   
+[Leri Analytics](https://kornmann.bioch.ox.ac.uk/leri) (leri, also termed leria) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of   
 - protein rational design  
 - protein folding *in silico* (improved from [Sibe](http://wyu.dgist.ac.kr/sibe/))  
 - NGS data analysis  
