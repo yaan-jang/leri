@@ -1,11 +1,13 @@
 # Leri Analytics
 [Leri Analytics](https://kornmann.bioch.ox.ac.uk/leri) (leri, also termed leria) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of   
 - protein rational design  
+- evolutionary coupling analysis 
+- functionally relevant residue communities 
 - protein folding *in silico* (improved from [Sibe](http://wyu.dgist.ac.kr/sibe/))  
-- NGS data analysis  
 - statistical analysis on data  
 - deep learning & optimization  
-- sequentially evolving neural networks (SENET)  
+- sequentially evolving neural networks (SENET) 
+- NGS data analysis  
 - as well as other omic data analysis.  
 
 Now, Leri is supported by GPU to accelerate calculations in life science.
