@@ -1,8 +1,8 @@
 # Leri Analytics
 [Leri Analytics](https://kornmann.bioch.ox.ac.uk/leri) (leri, also termed leria) aims to provide bioinformatics services for and solutions to both academic labs and industries. Leri delivers better custom solutions in the fileds of   
-- protein rational design  
-- evolutionary coupling analysis 
-- functionally relevant residue communities 
+- protein rational design  ([web-server](https://kornmann.bioch.ox.ac.uk/leri/services/eca.html)) 
+- evolutionary coupling analysis ([web-server](https://kornmann.bioch.ox.ac.uk/leri/services/eca.html)) 
+- functionally relevant residue communities ([web-server](https://kornmann.bioch.ox.ac.uk/leri/services/eca.html)) 
 - protein folding *in silico* (improved from [Sibe](http://wyu.dgist.ac.kr/sibe/))  
 - statistical analysis on data  
 - deep learning & optimization  
