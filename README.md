@@ -17,6 +17,6 @@ Now, Leri is supported by GPU to accelerate calculations in life science.
 
 Leri Analytics delivers the most accurate solutions to your research and industrial applications. Understanding the specific purpose of your project, we will try our best to provide standard pipelines that particularly developed for your project, the best solutions, and the detailed analytical reports. 
 
-Find more about how to use it at [leri doc](https://leri.gitbook.io/doc/).
+Find more about how to use it at [leri doc](https://amo-ai.gitbook.io/amo).
 
 
